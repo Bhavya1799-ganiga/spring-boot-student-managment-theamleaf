@@ -5,8 +5,7 @@ import com.example.Student.Management.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.thymeleaf.engine.ModelBuilderTemplateHandler;
 
@@ -36,5 +35,27 @@ public class StudentController {
         System.out.println(students.toString());
         model.addAttribute("students",students);
     return "students";
+    }
+
+    @GetMapping("/students/new")
+    public String createStudent(Model model){
+
+        //create student
+        Student student = new Student();
+        model.addAttribute("student",student);
+        return "create_sudent";
+    }
+
+    @PostMapping("/students")
+    public String saveStudent(@ModelAttribute("student") Student student){
+        studentService.saveStudent(student);
+        return "redirect:/students";
+    }
+
+    @GetMapping("students/edit/{id}")
+    public String updateStudent(@PathVariable Long id,Model model){
+        model.addAttribute("student",studentService.getStudentById(id));
+
+        return "edit_student";
     }
 }
